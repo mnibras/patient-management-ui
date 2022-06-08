@@ -36,7 +36,7 @@ function NewPatient() {
                 </div>
                 <div className="addPatientItem">
                     <label>Zip Code</label>
-                    <input type="number" id="zipcode" required/>
+                    <input type="text" id="zipcode" required/>
                 </div>
                 <div className="addPatientItem">
                     <label>Phone</label>

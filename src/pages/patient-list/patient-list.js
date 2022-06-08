@@ -1,20 +1,72 @@
 import "./patient-list.css";
 import {DataGrid} from "@mui/x-data-grid";
 import {Link} from "react-router-dom";
+import {DeleteOutline} from "@mui/icons-material";
+import {useEffect, useState} from "react";
 
 function PatientList() {
 
+    const [patients, setPatients] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        fetch("http://localhost:9090/api/v1/patient")
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                setIsLoading(false);
+                setPatients(data);
+            });
+    }, []);
+
+    function deleteHandler(id) {
+        fetch("http://localhost:9090/api/v1/patient/".concat(id), {method: "DELETE"})
+            .then(() => {
+                setPatients(patients.filter((item) => item.id !== id));
+            });
+    }
+
     const columns = [
+        {field: "id", headerName: "ID", width: 80},
         {field: "firstName", headerName: "First Name", width: 150},
         {field: "lastName", headerName: "Last Name", width: 150},
         {field: "email", headerName: "Email", width: 150},
         {field: "address", headerName: "Address", width: 150},
-        {field: "city", headerName: "City", width: 150},
-        {field: "state", headerName: "State", width: 150},
+        {field: "city", headerName: "City", width: 100},
+        {field: "state", headerName: "State", width: 100},
         {field: "zipCode", headerName: "Zip Code", width: 100},
         {field: "phoneNumber", headerName: "Phone Number", width: 150},
+        {
+            field: "action",
+            headerName: "Action",
+            width: 150,
+            renderCell: (params) => {
+                const selectedPatient = {
+                    id: params.row.id,
+                    firstName: params.row.firstName,
+                    lastName: params.row.lastName,
+                    email: params.row.email,
+                    address: params.row.address,
+                    city: params.row.city,
+                    state: params.row.state,
+                    zipCode: params.row.zipCode,
+                    phoneNumber: params.row.phoneNumber
+                }
+                return (
+                    <>
+                        <Link to={"/patient/" + params.row.id} state={{data: selectedPatient}}>
+                            <button className="patientListEdit">Edit</button>
+                        </Link>
+                        <DeleteOutline className="patientListDelete"
+                                       onClick={() => deleteHandler(params.row.id)}
+                        />
+                    </>
+                );
+            },
+        },
     ]
-    const data = [
+    const tableData = [
         {id: 1, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
         {id: 2, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
         {id: 3, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
@@ -34,6 +86,16 @@ function PatientList() {
         {id: 17, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"}
     ]
 
+    if (false) {
+        return (
+            <div className="patientList">
+                <section>
+                    <p>Loading Patients...</p>
+                </section>
+            </div>
+        );
+    }
+
     return (
         <div className="patientList">
             <div>
@@ -42,9 +104,9 @@ function PatientList() {
                         <button className="addPatientButton">Create</button>
                     </Link>
                 </div>
-                <div style={{ height: 600, width: '100%' }}>
+                <div style={{ height: 635, width: '100%' }}>
                     <DataGrid
-                        rows={data}
+                        rows={tableData}
                         columns={columns}
                         pageSize={10}
                     />
