@@ -1,8 +1,24 @@
 import './App.css';
+import NavBar from "./components/navbar/navbar";
+import SideBar from "./components/sidebar/sidebar";
+import {Route, Routes} from "react-router-dom";
+import PatientList from "./pages/patient-list/patient-list";
+import NewPatient from "./pages/new-patient/new-patient";
+import Dashboard from "./pages/dashboard/dashboard";
 
 function App() {
     return (
-        <div>React App</div>
+        <div>
+            <NavBar/>
+            <div className="container">
+                <SideBar/>
+                <Routes>
+                    <Route path="/" element={<Dashboard/>}/>
+                    <Route path="/patient-list" element={<PatientList/>}/>
+                    <Route path="/new-patient" element={<NewPatient/>}/>
+                </Routes>
+            </div>
+        </div>
     );
 }
 
