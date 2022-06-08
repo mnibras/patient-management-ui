@@ -1,0 +1,51 @@
+.patient {
+    flex: 4;
+    padding: 20px;
+    margin-top: -15px;
+}
+
+.patientBottom {
+    padding: 5px;
+    margin: 5px;
+    -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+}
+
+.patientForm {
+    display: flex;
+    justify-content: space-between;
+}
+
+.patientFormLeft {
+    display: flex;
+    flex-direction: column;
+    margin-left: 40px;
+}
+
+.patientFormLeft > label {
+    margin-bottom: 10px;
+    color: gray;
+}
+
+.patientFormLeft > input {
+    margin-bottom: 10px;
+    border: none;
+    padding: 5px;
+    border-bottom: 1px solid gray;
+}
+
+.patientFormLeft > select {
+    margin-bottom: 10px;
+}
+
+.patientButton {
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: darkblue;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 300px;
+}

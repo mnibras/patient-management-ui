@@ -4,6 +4,8 @@ import {Link} from "react-router-dom";
 import {DeleteOutline} from "@mui/icons-material";
 import {useEffect, useState} from "react";
 
+const Swal = require('sweetalert2');
+
 function PatientList() {
 
     const [patients, setPatients] = useState([]);
@@ -20,11 +22,27 @@ function PatientList() {
             });
     }, []);
 
-    function deleteHandler(id) {
-        fetch("http://localhost:9090/api/v1/patient/".concat(id), {method: "DELETE"})
-            .then(() => {
-                setPatients(patients.filter((item) => item.id !== id));
-            });
+    function deleteHandler(id, name) {
+        Swal.fire({
+            title: 'Are you sure want to delete '.concat(name).concat(' ?'),
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch("http://localhost:9090/api/v1/patient/".concat(id), {method: "DELETE"})
+                    .then(() => {
+                        setPatients(patients.filter((item) => item.id !== id));
+                        Swal.fire(
+                            'Deleted!',
+                            'Patient Name: '.concat(name).concat(' has been deleted.'),
+                            'success'
+                        )
+                    });
+            }
+        })
     }
 
     const columns = [
@@ -59,34 +77,15 @@ function PatientList() {
                             <button className="patientListEdit">Edit</button>
                         </Link>
                         <DeleteOutline className="patientListDelete"
-                                       onClick={() => deleteHandler(params.row.id)}
+                                       onClick={() => deleteHandler(params.row.id, params.row.firstName)}
                         />
                     </>
                 );
             },
         },
     ]
-    const tableData = [
-        {id: 1, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
-        {id: 2, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
-        {id: 3, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
-        {id: 4, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
-        {id: 5, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
-        {id: 6, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
-        {id: 7, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
-        {id: 8, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
-        {id: 9, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
-        {id: 10, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
-        {id: 11, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
-        {id: 12, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
-        {id: 13, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
-        {id: 14, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
-        {id: 15, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
-        {id: 16, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"},
-        {id: 17, firstName: "Mohamed", lastName: "Nibras", email: "mn@gmail.com", address: "6/11D", city: "Matale", state: "Central", zipCode: "123", phoneNumber: "456456"}
-    ]
 
-    if (false) {
+    if (isLoading) {
         return (
             <div className="patientList">
                 <section>
@@ -104,9 +103,9 @@ function PatientList() {
                         <button className="addPatientButton">Create</button>
                     </Link>
                 </div>
-                <div style={{ height: 635, width: '100%' }}>
+                <div style={{height: 635, width: '100%'}}>
                     <DataGrid
-                        rows={tableData}
+                        rows={patients}
                         columns={columns}
                         pageSize={10}
                     />

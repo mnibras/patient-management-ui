@@ -5,6 +5,7 @@ import {Route, Routes} from "react-router-dom";
 import PatientList from "./pages/patient-list/patient-list";
 import NewPatient from "./pages/new-patient/new-patient";
 import Dashboard from "./pages/dashboard/dashboard";
+import Patient from "./pages/patient/patient";
 
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
                     <Route path="/" element={<Dashboard/>}/>
                     <Route path="/patient-list" element={<PatientList/>}/>
                     <Route path="/new-patient" element={<NewPatient/>}/>
+                    <Route path="/patient/:patientId" element={<Patient/>}/>
                 </Routes>
             </div>
         </div>
