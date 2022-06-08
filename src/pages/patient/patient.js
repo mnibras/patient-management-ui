@@ -29,11 +29,21 @@ function Patient() {
                     'Content-Type': 'application/json'
                 }
             }
-        ).then(() => {
-            Swal.fire(
-                'Patient Id: '.concat(location.state.data.id).concat(' updated !')
-            )
-            navigate("/patient-list", {replace: true});
+        ).then((response) => {
+            if(response.status === 200) {
+                Swal.fire(
+                    'Patient Id: '.concat(location.state.data.id).concat(' updated !')
+                )
+                navigate("/patient-list", {replace: true});
+            }
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Something Went Wrong',
+                    text: 'Error while update patient!',
+                })
+                console.error(response.error());
+            }
         });
     }
 

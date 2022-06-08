@@ -14,7 +14,16 @@ function PatientList() {
     useEffect(() => {
         fetch("http://localhost:9090/api/v1/patient")
             .then(response => {
-                return response.json();
+                if(response.status === 200) {
+                    return response.json();
+                }else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Something Went Wrong',
+                        text: 'Error while loading patients!',
+                    })
+                    console.error(response.error());
+                }
             })
             .then(data => {
                 setIsLoading(false);
@@ -33,13 +42,23 @@ function PatientList() {
         }).then((result) => {
             if (result.isConfirmed) {
                 fetch("http://localhost:9090/api/v1/patient/".concat(id), {method: "DELETE"})
-                    .then(() => {
-                        setPatients(patients.filter((item) => item.id !== id));
-                        Swal.fire(
-                            'Deleted!',
-                            'Patient Name: '.concat(name).concat(' has been deleted.'),
-                            'success'
-                        )
+                    .then((response) => {
+                        if(response.status === 200) {
+                            setPatients(patients.filter((item) => item.id !== id));
+                            Swal.fire(
+                                'Deleted!',
+                                'Patient Name: '.concat(name).concat(' has been deleted.'),
+                                'success'
+                            )
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Something Went Wrong',
+                                text: 'Error while delete patient!',
+                            })
+                            console.error(response.error());
+                        }
                     });
             }
         })

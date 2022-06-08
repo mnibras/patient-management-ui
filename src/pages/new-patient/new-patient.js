@@ -27,11 +27,21 @@ function NewPatient() {
                     'Content-Type': 'application/json'
                 }
             }
-        ).then(() => {
-            Swal.fire(
-                'New patient added!'
-            )
-            navigate("/patient-list", {replace: true});
+        ).then((response) => {
+            if(response.status === 201) {
+                Swal.fire(
+                    'New patient added!'
+                )
+                navigate("/patient-list", {replace: true});
+            }
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Something Went Wrong',
+                    text: 'Error while save patient!',
+                })
+                console.error(response.error());
+            }
         });
     }
 
